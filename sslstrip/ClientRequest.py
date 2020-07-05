@@ -16,7 +16,7 @@
 # USA
 #
 
-import urlparse, logging, os, sys, random
+import urllib.parse, logging, os, sys, random
 
 from twisted.web.http import Request
 from twisted.web.http import HTTPChannel
@@ -27,12 +27,12 @@ from twisted.internet import defer
 from twisted.internet import reactor
 from twisted.internet.protocol import ClientFactory
 
-from ServerConnectionFactory import ServerConnectionFactory
-from ServerConnection import ServerConnection
-from SSLServerConnection import SSLServerConnection
-from URLMonitor import URLMonitor
-from CookieCleaner import CookieCleaner
-from DnsCache import DnsCache
+from sslstrip.ServerConnectionFactory import ServerConnectionFactory
+from sslstrip.ServerConnection import ServerConnection
+from sslstrip.SSLServerConnection import SSLServerConnection
+from sslstrip.URLMonitor import URLMonitor
+from sslstrip.CookieCleaner import CookieCleaner
+from sslstrip.DnsCache import DnsCache
 
 class ClientRequest(Request):
 
@@ -40,8 +40,8 @@ class ClientRequest(Request):
     the magic begins.  Here we remove the client headers we dont like, and then
     respond with either favicon spoofing, session denial, or proxy through HTTP
     or SSL to the server.
-    '''    
-    
+    '''
+
     def __init__(self, channel, queued, reactor=reactor):
         Request.__init__(self, channel, queued)
         self.reactor       = reactor
@@ -69,7 +69,7 @@ class ClientRequest(Request):
             index = self.uri.find('/', 7)
             return self.uri[index:]
 
-        return self.uri        
+        return self.uri
 
     def getPathToLockIcon(self):
         if os.path.exists("lock.ico"): return "lock.ico"
@@ -80,7 +80,7 @@ class ClientRequest(Request):
         if os.path.exists(scriptPath): return scriptPath
 
         logging.warning("Error: Could not find lock.ico")
-        return "lock.ico"        
+        return "lock.ico"
 
     def handleHostResolvedSuccess(self, address):
         logging.debug("Resolved host successfully: %s -> %s" % (self.getHeader('host'), address))
@@ -126,12 +126,12 @@ class ClientRequest(Request):
 
     def process(self):
         logging.debug("Resolving host: %s" % (self.getHeader('host')))
-        host     = self.getHeader('host')               
+        host     = self.getHeader('host')
         deferred = self.resolveHost(host)
 
         deferred.addCallback(self.handleHostResolvedSuccess)
         deferred.addErrback(self.handleHostResolvedError)
-        
+
     def proxyViaHTTP(self, host, method, path, postData, headers):
         connectionFactory          = ServerConnectionFactory(method, path, postData, headers, self)
         connectionFactory.protocol = ServerConnection
@@ -147,18 +147,18 @@ class ClientRequest(Request):
         self.setResponseCode(302, "Moved")
         self.setHeader("Connection", "close")
         self.setHeader("Location", "http://" + host + path)
-        
+
         for header in expireHeaders:
             self.setHeader("Set-Cookie", header)
 
-        self.finish()        
-        
+        self.finish()
+
     def sendSpoofedFaviconResponse(self):
         icoFile = open(self.getPathToLockIcon())
 
         self.setResponseCode(200, "OK")
         self.setHeader("Content-type", "image/x-icon")
         self.write(icoFile.read())
-                
+
         icoFile.close()
         self.finish()
