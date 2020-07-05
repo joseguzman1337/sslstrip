@@ -1,4 +1,32 @@
-sslstrip is a MITM tool that implements Moxie Marlinspike's SSL stripping 
+## This is a fork of sslstrip to python3
+
+### Installing
+
+#### Withouth Virtualenv
+
+`apt install python3 python3-pip git`
+`git clone https://github.com/hallowf/sslstrip.git`
+`cd sslstrip`
+`python3 -m pip install -r requirements.txt`
+`python3 sslstrip.py -h`
+
+#### With Virtualenv
+
+```
+apt install python3 python3-pip git
+git clone https://github.com/hallowf/sslstrip.git
+cd sslstrip
+python3 -m pip install virtualenv
+virtualenv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python sslstrip.py -h
+```
+
+### I haven't looked at setup.py so it probably won't work
+
+### Original README --->
+sslstrip is a MITM tool that implements Moxie Marlinspike's SSL stripping
 attacks.
 
 It requires Python 2.5 or newer, along with the 'twisted' python module.
@@ -6,15 +34,15 @@ It requires Python 2.5 or newer, along with the 'twisted' python module.
 Installing:
 	* Unpack: tar zxvf sslstrip-0.5.tar.gz
 	* Install twisted:  sudo apt-get install python-twisted-web
-	* (Optionally) run 'python setup.py install' as root to install, 
+	* (Optionally) run 'python setup.py install' as root to install,
 	  or you can just run it out of the directory.  
 
 Running:
 	sslstrip can be run from the source base without installation.  
-	Just run 'python sslstrip.py -h' as a non-root user to get the 
+	Just run 'python sslstrip.py -h' as a non-root user to get the
 	command-line options.
 
-	The four steps to getting this working (assuming you're running Linux) 
+	The four steps to getting this working (assuming you're running Linux)
 	are:
 
 	1) Flip your machine into forwarding mode (as root):
@@ -22,7 +50,7 @@ Running:
 
 	2) Setup iptables to intercept HTTP requests (as root):
 	   iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port <yourListenPort>
-	
+
 	3) Run sslstrip with the command-line options you'd like (see above).
 
 	4) Run arpspoof to redirect traffic to your machine (as root):
