@@ -4,11 +4,24 @@
 
 #### Withouth Virtualenv
 
-`apt install python3 python3-pip git`
-`git clone https://github.com/hallowf/sslstrip.git`
-`cd sslstrip`
-`python3 -m pip install -r requirements.txt`
-`python3 sslstrip.py -h`
+----------
+
+Edit APT Repo
+----------
+```ShellSession
+nano /etc/apt/sources.list
+```
+Add this repo
+```ShellSession
+deb http://ftp.debian.org/debian/ stretch main contrib non-free
+```
+#
+Install as root:
+```ShellSession
+apt update -y && apt install git -y && cd /usr/share && git clone https://github.com/4k4xs4pH1r3/sslstrip.git && sudo aptitude install python-twisted-web python3 python3-pip git -y && cd sslstrip && python setup.py install && python3 -m pip install -r requirements.txt && pip install twisted carbon autobahn autobahn && python3 sslstrip.py -h
+``` 
+
+
 
 #### With Virtualenv
 
