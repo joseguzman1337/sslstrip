@@ -1,4 +1,4 @@
-## This is a fork of sslstrip to python3
+## This is a fork of sslstrip to works with python3
 
 ### Installing
 
