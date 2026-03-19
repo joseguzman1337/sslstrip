@@ -1,2 +1,2 @@
-pyOpenSSL
-Twisted
+pyOpenSSL==26.0.0
+Twisted==25.5.0
