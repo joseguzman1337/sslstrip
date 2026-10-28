@@ -1,2 +1,2 @@
 pyOpenSSL==26.0.0
-Twisted==25.5.0
+Twisted==26.10.0rc1
